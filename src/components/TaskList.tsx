@@ -1,34 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFocusStore } from "@/store/useFocusStore";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function TaskList() {
   const [input, setInput] = useState("");
   const { tasks, addTask, toggleTask } = useFocusStore();
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  const handleAddTask = () => {
+    if (!input.trim()) return;
+
+    addTask(input);
+    setInput("");
+
+    inputRef.current?.focus();
+  };
   return (
-    <div className="w-full max-w-md mx-auto">
-
-      {/* Panel */}
+    <div className="w-full">
       <div className="p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl space-y-4">
-
-        {/* Input */}
         <div className="flex gap-2">
           <input
+            ref={inputRef}
             className="flex-1 p-2 bg-transparent outline-none text-sm placeholder:text-white/40"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleAddTask();
+              }
+            }}
             placeholder="What deserves your focus?"
           />
 
           <button
-            onClick={() => {
-              if (!input.trim()) return;
-              addTask(input);
-              setInput("");
-            }}
+            onClick={handleAddTask}
             className="px-3 rounded-lg bg-white/10 hover:bg-white/20 transition"
           >
             +

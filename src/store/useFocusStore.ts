@@ -4,6 +4,7 @@ type Theme = "midnight" | "forest";
 
 interface FocusState {
   time: number;
+  duration: number;
   isRunning: boolean;
   theme: Theme;
   tasks: { id: string; text: string; done: boolean }[];
@@ -16,10 +17,12 @@ interface FocusState {
 
   addTask: (text: string) => void;
   toggleTask: (id: string) => void;
+  setDuration: (seconds: number) => void;
 }
 
 export const useFocusStore = create<FocusState>((set) => ({
   time: 1500,
+  duration: 1500,
   isRunning: false,
   theme: "midnight",
   tasks: [],
@@ -41,4 +44,10 @@ export const useFocusStore = create<FocusState>((set) => ({
         t.id === id ? { ...t, done: !t.done } : t
       ),
     })),
+
+  setDuration: (seconds) =>
+    set({
+      duration: seconds,
+      time: seconds,
+    }),
 }));
